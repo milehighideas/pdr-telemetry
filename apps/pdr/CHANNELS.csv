@@ -1,0 +1,67 @@
+channel,name,confidence,unit,scale,offset,typical_hz,raw_min,raw_max,scaled_min,scaled_max,samples,files_seen,evidence_or_notes
+0x01,ch_01,unknown,,,,,,,,,,,correlates +0.61 with longitudinal accel - a pedal or torque signal
+0x02,coolant_temp,probable,C,1,40,,,,,,,,matches a driver-reported coolant gauge reading under a -40 C offset. 0x3f sits at near-identical magnitude and cannot be ruled out; 0x02 was preferred because it varies with load while 0x3f is near-constant
+0x03,ch_03,unknown,,,,,,,,,,,correlates +0.70 with longitudinal accel - pedal or torque signal
+0x04,ch_04,unknown,,,,,,,,,,,"slow, 0-130, weak correlation with anything tested"
+0x05,oil_temp,confirmed,C,1,40,,,,,,,,matches a driver-reported oil gauge reading to within a degree under a -40 C offset; hottest of the fluid group and the most load-responsive (+42 raw over a track session)
+0x06,engine_rpm,confirmed,rpm,0.25,,,,,,,,,"160 sharp drops while accelerating, before/after ratios cluster at 1.20-1.25 (gearbox steps); reads 0 at standstill"
+0x07,throttle,confirmed,raw,1,,,,,,,,,correlates +0.75 with longitudinal accel derived independently from wheel speed
+0x08,ch_08,unknown,,,,,,,,,,,"0-254, weak negative correlation with longitudinal accel"
+0x09,brake,confirmed,raw,1,,,,,,,,,correlates -0.78 with the same longitudinal accel
+0x0a,tyre_pressure_1,confirmed,psi,0.5,,,,,,,,,"rises several psi across a track session and sits several psi lower than on road drives, matching pressures being bled down for track use"
+0x0b,tyre_pressure_2,confirmed,psi,0.5,,,,,,,,,as 0x0a
+0x0c,tyre_pressure_3,confirmed,psi,0.5,,,,,,,,,as 0x0a
+0x0d,tyre_pressure_4,confirmed,psi,0.5,,,,,,,,,as 0x0a
+0x0e,ch_0e,unknown,,,,,,,,,,,"constant 1 - flag. One of four (0x0e-0x11), likely per-wheel TPMS status"
+0x0f,ch_0f,unknown,,,,,,,,,,,constant 1 - see 0x0e
+0x10,ch_10,unknown,,,,,,,,,,,constant 1 - see 0x0e
+0x11,ch_11,unknown,,,,,,,,,,,constant 1 - see 0x0e
+0x12,tyre_temp_1,probable,C,1,40,,,,,,,,"climbs steeply over consecutive hot laps and stays flat on road drives, so the identification is solid. The -40 offset is NOT: it yields near-freezing values in summer footage. The peak is right for track use, so the scale is likely fine and the offset is not"
+0x13,tyre_temp_2,probable,C,1,40,,,,,,,,as 0x12
+0x14,tyre_temp_3,probable,C,1,40,,,,,,,,as 0x12
+0x15,tyre_temp_4,probable,C,1,40,,,,,,,,as 0x12
+0x16,gear,confirmed,code,1,,,,,,,,,"exact match against the on-screen gear readout at every point checked; mean speed rises monotonically across codes 1-6; 13 appears at high speed (neutral, coasting) and 14 only below walking pace (reverse)"
+0x17,ch_17,unknown,,,,,,,,,,,"temperature-shaped, 66-84 C if offset -40"
+0x18,ch_18,unknown,,,,,,,,,,,"temperature-shaped, wide range"
+0x1a,ch_1a,probable,,,,,,,,,,,correlates -0.936 with lateral accel; appears to be 0x43 offset-encoded by +32544 with inverted sign
+0x1b,ch_1b,unknown,,,,,,,,,,,"slowly increasing, ~1.04 million - odometer candidate, scale unknown"
+0x1c,speed,confirmed,m/s,0.00434028,,,,,,,,,"matches the on-screen speed readout to +/-0.5 mph; exactly half the wheel-speed scale, i.e. 1/64 km/h per bit"
+0x1d,ch_1d,unknown,,,,,,,,,,,constant 0
+0x1e,ch_1e,unknown,,,,,,,,,,,constant 0
+0x1f,ch_1f,unknown,,,,,,,,,,,constant 0
+0x20,ch_20,unknown,,,,,,,,,,,constant 0
+0x21,ch_21,unknown,,,,,,,,,,,"two values (1, 10) - a mode or state flag"
+0x22,trans_temp,probable,C,1,40,,,,,,,,"matches a driver-reported transmission gauge reading under a -40 C offset. Caveat: it warms faster than a gearbox plausibly would, so 0x17 remains an alternative"
+0x23,accel_lat,confirmed,g,0.000305176,,,,,,,,,orthogonal to longitudinal (corr -0.03 with d(speed)/dt); steering correlates +0.965 with it
+0x24,accel_long,confirmed,g,0.000305176,,,,,,,,,"correlates +0.889 with d(speed)/dt from wheel speed - this is the LONGITUDINAL axis, not lateral as first assumed"
+0x25,accel_vert,confirmed,g,0.000305176,,,,,,,,,"holds the gravity vector at standstill; triad magnitude at rest is 3233 units, giving 1/3276.8 g per bit to 1.3%"
+0x26,latitude,confirmed,deg,1e-07,,,,,,,,,"decodes to coordinates that fall on the roads actually driven, and closes into a circuit on track footage"
+0x27,longitude,confirmed,deg,1e-07,,,,,,,,,as 0x26
+0x28,altitude,confirmed,m,0.01,,,,,,,,,tracks terrain elevation over a drive and agrees with known ground height along the route
+0x29,gps_heading,confirmed,deg,0.01,,,,,,,,,median error 0.26 deg against GPS-derived bearing; 99.4% of moving samples within 5 deg
+0x2a,ch_2a,unknown,,,,,,,,,,,constant 1 - likely a GPS validity flag (sits in the GPS block)
+0x2b,gps_fix,probable,code,1,,,,,,,,,"sits in the GPS block; 1-4 in a single file but 1-16 across all 31, which fits a constellation bitmask better than a plain fix-quality code - treat the name as unsettled"
+0x2c,gps_satellites,probable,count,1,,,,,,,,,"sits in the GPS block, 3-17 across all recordings, tracking sky visibility - consistent with satellite count"
+0x2d,lap,confirmed,count,1,,,,,,,,,logged on change only; intervals between marks reproduce independently OCR-derived lap times to within 0.005 s. The only mismatches were spurious OCR 'pit fragments' that the counter correctly never counted
+0x2e,ch_2e,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x2f,ch_2f,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x30,ch_30,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x31,ch_31,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x32,ch_32,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x33,ch_33,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x34,ch_34,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x35,ch_35,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x36,ch_36,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x37,ch_37,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x38,ch_38,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x39,ch_39,unknown,,,,,,,,,,,1 Hz block member (0x2e-0x39); these look like session or trip accumulators rather than live sensor values
+0x3a,ch_3a,unknown,,,,,,,,,,,reaches 2147483647 (INT32_MAX) - a saturation or invalid sentinel
+0x3b,wheel_1,confirmed,m/s,0.00868056,,,,,,,,,correlates 1.000 with GPS ground speed; as 1/32 km/h per bit (standard GM CAN) matches on-screen speed to 0.8 mph
+0x3c,wheel_2,confirmed,m/s,0.00868056,,,,,,,,,as 0x3b
+0x3d,wheel_3,confirmed,m/s,0.00868056,,,,,,,,,as 0x3b
+0x3e,wheel_4,confirmed,m/s,0.00868056,,,,,,,,,as 0x3b
+0x3f,ch_3f,unknown,,,,,,,,,,,"temperature-shaped and close to coolant in magnitude (~74-121 C at offset -40), but far more tightly regulated - flat to sd 0.59 on track and dead constant in some files. A second coolant loop, or a setpoint rather than a measurement"
+0x40,ch_40,unknown,,,,,,,,,,,"narrow band 65-86, steps frequently"
+0x41,ch_41,unknown,,,,,,,,,,,"temperature-shaped, 62-67 C if offset -40"
+0x42,ch_42,unknown,,,,,,,,,,,"temperature-shaped, 64-75 C if offset -40, ~10 Hz"
+0x43,steering,probable,raw,1,,,,,,,,,"correlates +0.965 with lateral accel, so direction and identity are solid; degrees-per-bit is NOT established"

@@ -1,0 +1,12 @@
+# Raw and derived video — far too large for git
+footage/
+work/
+
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Session transcripts and any other personal material
+docs/
