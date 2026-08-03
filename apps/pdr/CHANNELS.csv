@@ -5,9 +5,9 @@ channel,name,confidence,unit,scale,offset,typical_hz,raw_min,raw_max,scaled_min,
 0x04,ch_04,unknown,,,,,,,,,,,"slow, 0-130, weak correlation with anything tested"
 0x05,oil_temp,confirmed,C,1,40,,,,,,,,matches a driver-reported oil gauge reading to within a degree under a -40 C offset; hottest of the fluid group and the most load-responsive (+42 raw over a track session)
 0x06,engine_rpm,confirmed,rpm,0.25,,,,,,,,,"160 sharp drops while accelerating, before/after ratios cluster at 1.20-1.25 (gearbox steps); reads 0 at standstill"
-0x07,throttle,confirmed,raw,1,,,,,,,,,correlates +0.75 with longitudinal accel derived independently from wheel speed
+0x07,throttle,confirmed,%,0.395257,,,,,,,,,"goes to 0 the instant the driver lifts and stays there through every braking zone; correlates +0.75 with longitudinal accel derived independently from wheel speed. Saturates at 253 (2824 occurrences vs ~600 each at 249-251, never higher), so 253 is full scale and this is a percentage"
 0x08,ch_08,unknown,,,,,,,,,,,"0-254, weak negative correlation with longitudinal accel"
-0x09,brake,confirmed,raw,1,,,,,,,,,correlates -0.78 with the same longitudinal accel
+0x09,brake,confirmed,raw,1,,,,,,,,,"exactly 0 while accelerating or coasting, rising as deceleration builds and decaying on release; correlates -0.78 with longitudinal accel and +0.83 with deceleration while braking. NOT a percentage: the top of its range tails off smoothly rather than piling up, so there is no fully-pressed ceiling. Pressure- or force-like, roughly linear at ~0.0067 g per count"
 0x0a,tyre_pressure_1,confirmed,psi,0.5,,,,,,,,,"rises several psi across a track session and sits several psi lower than on road drives, matching pressures being bled down for track use"
 0x0b,tyre_pressure_2,confirmed,psi,0.5,,,,,,,,,as 0x0a
 0x0c,tyre_pressure_3,confirmed,psi,0.5,,,,,,,,,as 0x0a

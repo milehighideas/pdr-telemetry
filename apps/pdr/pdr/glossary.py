@@ -29,9 +29,18 @@ CONFIRMED, PROBABLE, UNKNOWN = "confirmed", "probable", "unknown"
 EVIDENCE: dict[int, tuple[str, str]] = {
     0x06: (CONFIRMED, "160 sharp drops while accelerating, before/after ratios "
                       "cluster at 1.20-1.25 (gearbox steps); reads 0 at standstill"),
-    0x07: (CONFIRMED, "correlates +0.75 with longitudinal accel derived "
-                      "independently from wheel speed"),
-    0x09: (CONFIRMED, "correlates -0.78 with the same longitudinal accel"),
+    0x07: (CONFIRMED, "goes to 0 the instant the driver lifts and stays there "
+                      "through every braking zone; correlates +0.75 with "
+                      "longitudinal accel derived independently from wheel speed. "
+                      "Saturates at 253 (2824 occurrences vs ~600 each at 249-251, "
+                      "never higher), so 253 is full scale and this is a percentage"),
+    0x09: (CONFIRMED, "exactly 0 while accelerating or coasting, rising as "
+                      "deceleration builds and decaying on release; correlates "
+                      "-0.78 with longitudinal accel and +0.83 with deceleration "
+                      "while braking. NOT a percentage: the top of its range tails "
+                      "off smoothly rather than piling up, so there is no "
+                      "fully-pressed ceiling. Pressure- or force-like, roughly "
+                      "linear at ~0.0067 g per count"),
     0x0A: (CONFIRMED, "rises several psi across a track session and sits several psi "
                       "lower than on road drives, matching pressures being bled "
                       "down for track use"),

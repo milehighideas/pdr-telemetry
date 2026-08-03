@@ -77,7 +77,15 @@ CHANNELS: dict[int, tuple[str, str, float]] = {
     0x43: ("steering", "raw", 1.0),
     # --- driver inputs and engine ---
     0x06: ("engine_rpm", "rpm", 0.25),
-    0x07: ("throttle", "raw", 1.0),
+    # Throttle saturates hard at 253: across all recordings that value occurs
+    # 2824 times against ~600 each for 249-251, and never higher. That ceiling is
+    # wide-open throttle, so 253 is full scale and the channel converts to percent.
+    0x07: ("throttle", "%", 100 / 253),
+    # Brake has no such ceiling — its top values tail off smoothly (122 once, 121
+    # twice, 120 twice) rather than piling up, so there is no "fully pressed" value
+    # to normalise against. It behaves like a pressure or force signal: correlation
+    # with deceleration is +0.83 and the response is close to linear at roughly
+    # 0.0067 g per count. Left in raw counts rather than invent a percentage.
     0x09: ("brake", "raw", 1.0),
     0x16: ("gear", "code", 1.0),
     # Lap counter. Logged only when it changes, and absent entirely from
